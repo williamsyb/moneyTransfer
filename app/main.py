@@ -1,4 +1,4 @@
-from .app_factory import make_app
+from app_factory import make_app
 import uvicorn
 
 app = make_app()

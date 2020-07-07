@@ -6,8 +6,6 @@ from sqlalchemy.orm import Session
 from typing import List
 router = APIRouter()
 
-router = APIRouter()
-
 
 @router.post("/sheets", response_model=List[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

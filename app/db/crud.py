@@ -1,36 +1,51 @@
+from fastapi import Depends
 from sqlalchemy.orm import Session
+from app.db.database import get_db
+from functools import wraps
+from app.db.models import User
+from app.schemas.auth_user import UserIn, UserInDB
+from fastapi.logger import logger
+from app.auth import get_password_hash
 
-from . import models, schemas
+
+async def db_commit_decorator(func):
+    @wraps(func)
+    async def session_commit(*args, **kwargs):
+        db: Session = kwargs.get('db')
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.error('db operation error，here are details{}'.format(e))
+            logger.warning('transaction rollbacks')
+            db.rollback()
+
+    return session_commit
 
 
-def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+@db_commit_decorator
+async def get_user(user_id: int, db: Session = Depends(get_db)):
+    return db.query(User).filter(User.id == user_id).first()
 
 
+@db_commit_decorator
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(User).filter(User.email == email).first()
 
 
+@db_commit_decorator
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+    return db.query(User).offset(skip).limit(limit).all()
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = user.password + "notreallyhashed"
-    db_user = models.User(email=user.email, hashed_password=fake_hashed_password)
+@db_commit_decorator
+async def create_user(user: UserIn, db: Session = Depends(get_db)):
+    hashed_pw = get_password_hash(user.password)
+    db_user = User(username=user.username, full_name=user.full_name,
+                   email=user.email, hashed_password=hashed_pw)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
-
-def get_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Item).offset(skip).limit(limit).all()
-
-
-def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = models.Item(**item.dict(), owner_id=user_id)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
+# def get_items(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(models.Item).offset(skip).limit(limit).all()
