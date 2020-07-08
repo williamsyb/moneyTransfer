@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, HTTPException, status
-from app.schemas.auth_user import Token, UserIn, UserOut
 from datetime import timedelta
-from app.config.config import config
-from app.auth import authenticate_user, create_access_token
-from app.db.database import get_db
-from app.db.crud import create_user
+from schemas.auth_user import Token, UserIn, UserOut
+from config.config import config
+from auth import authenticate_user, create_access_token
+from db.database import get_db
+from db.crud import create_user
 from sqlalchemy.orm import Session
 
 

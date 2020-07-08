@@ -1,11 +1,11 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.db.database import get_db
+from db.database import get_db
 from functools import wraps
-from app.db.models import User
-from app.schemas.auth_user import UserIn, UserInDB
+from db.models import User
+from schemas.auth_user import UserIn, UserInDB
 from fastapi.logger import logger
-from app.auth import get_password_hash
+from auth import get_password_hash
 
 
 async def db_commit_decorator(func):

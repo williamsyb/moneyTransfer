@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from app.schemas.auth_user import TokenData, UserInDB
+from schemas.auth_user import TokenData, UserInDB
 # from app.db.models import User
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
 from passlib.context import CryptContext
-from app.config import config
-from app.db.models import User
-from app.db.database import get_db
+from config import config
+from db.models import User
+from db.database import get_db
 
 fake_users_db = {}
 from sqlalchemy.orm import Session
