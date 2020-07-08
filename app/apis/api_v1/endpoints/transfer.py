@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 route = APIRouter()
 
-@route.post('/createTransfer')
-def create_transfer(start_user, end_user, db:Session=Depends(get_db)):
 
+@route.post('/createTransfer')
+def create_transfer(start_user, end_user, db: Session = Depends(get_db)):
+    pass
