@@ -36,5 +36,5 @@ async def register(*, user: UserIn, db: Session = Depends(get_db)):
     # email: EmailStr
     # full_name: str = None
 
-    user_created = create_user(user, db)
+    user_created = await create_user(user, db)
     return user_created

@@ -3,22 +3,21 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from functools import wraps
 from db.models import User
-from schemas.auth_user import UserIn, UserInDB
+from schemas.auth_user import UserIn
 from fastapi.logger import logger
 from auth import get_password_hash
 
 
-async def db_commit_decorator(func):
+def db_commit_decorator(func):
     @wraps(func)
     async def session_commit(*args, **kwargs):
         db: Session = kwargs.get('db')
         try:
-            return func(*args, **kwargs)
+            return await func(*args, **kwargs)
         except Exception as e:
             logger.error('db operation error，here are details{}'.format(e))
             logger.warning('transaction rollbacks')
             db.rollback()
-
     return session_commit
 
 
@@ -28,12 +27,12 @@ async def get_user(user_id: int, db: Session = Depends(get_db)):
 
 
 @db_commit_decorator
-def get_user_by_email(db: Session, email: str):
+async def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
 @db_commit_decorator
-def get_users(db: Session, skip: int = 0, limit: int = 100):
+async def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).offset(skip).limit(limit).all()
 
 

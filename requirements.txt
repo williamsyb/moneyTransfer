@@ -5,3 +5,7 @@ PyJWT==1.7.1
 python-multipart
 sqlalchemy
 uvicorn
+pytest
+requests
+faker
+pipreqs
