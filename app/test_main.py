@@ -2,12 +2,14 @@ from fastapi.testclient import TestClient
 from faker import Faker
 from main import app
 import time
+import pytest
+
 client = TestClient(app)
 fake: Faker = Faker()
 
+
 # pip install pytest
 # >  pytest 会直接运行test_main.py，并出具测试报告
-
 
 def test_create_user():
     for i in range(50):

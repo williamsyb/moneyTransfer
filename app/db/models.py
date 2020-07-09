@@ -16,8 +16,9 @@ class User(Base):
     full_name = Column(String(30))
     email = Column(String(120), unique=True, index=True)
     hashed_password = Column(String(128))
-
+    wallet = Column(Float, default=100.0)
     is_active = Column(Boolean, default=True)
+    is_supervisor =Column(Boolean, default=False)
 
 
 class Balance(Base):

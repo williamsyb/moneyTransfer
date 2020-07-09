@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 
 
 class Token(BaseModel):
@@ -16,6 +16,7 @@ class UserIn(BaseModel):
     password: str
     email: EmailStr
     full_name: str = None
+    is_supervisor: bool = False
 
 
 class UserOut(BaseModel):
@@ -29,3 +30,7 @@ class UserOut(BaseModel):
 
 class UserInDB(UserIn):
     hashed_password: str
+
+
+class AllUser(BaseModel):
+    all_user: List[UserOut]

@@ -1,17 +1,22 @@
-from fastapi import APIRouter
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import Depends, HTTPException, status
-from datetime import timedelta
-from schemas.auth_user import Token, UserIn, UserOut
-from config.config import config
-from auth import authenticate_user, create_access_token
-from db.database import get_db
-from db.crud import create_user
+from fastapi import APIRouter, HTTPException, status, Depends
+from schemas.transfer import UserTransfer, TransferRecord
 from sqlalchemy.orm import Session
+from auth.auth import get_current_active_user
+from db.crud import create_transfer_record
+from db.database import get_db
 
-route = APIRouter()
+router = APIRouter()
 
 
-@route.post('/createTransfer')
-def create_transfer(start_user, end_user, db: Session = Depends(get_db)):
-    pass
+@router.post('/createTransfer', response_model=TransferRecord)
+async def create_transfer(target_user: UserTransfer, amount: float,
+                          db: Session = Depends(get_db),
+                          current_user: UserTransfer = Depends(get_current_active_user)):
+    flag, transfer_record_or_msg = await create_transfer_record(current_user.id, target_user.id, amount, db)
+    if not flag:
+        raise HTTPException(
+            status_code=status.HTTP_200_OK,
+            detail=transfer_record_or_msg,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return transfer_record_or_msg
