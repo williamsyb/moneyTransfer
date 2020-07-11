@@ -1,6 +1,5 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, DateTime
+from sqlalchemy import Boolean, Column, Integer, String, Float, DateTime
 from sqlalchemy.dialects.mysql import LONGTEXT
-from sqlalchemy.orm import relationship
 from datetime import datetime as dt
 from .database import Base
 from config.config import config

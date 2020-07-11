@@ -21,7 +21,6 @@ def db_commit_decorator(func):
         try:
             return await func(*args, **kwargs)
         except Exception as e:
-            print('--------------------------------------------------e:', e)
             logger.error('db operation error，here are details{}'.format(e))
             logger.warning('transaction rollbacks')
             db.rollback()
