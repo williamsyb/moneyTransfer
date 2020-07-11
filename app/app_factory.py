@@ -10,7 +10,12 @@ origins = [
 
 
 def make_app():
-    app = FastAPI()
+    app = FastAPI(
+        title="Money Transaction Service",
+        description="This is a money transation system, with auto docs for the API and everything",
+        version="0.0.1",
+    )
+    app.__name__ = 'Transaction Service'
     app.include_router(api_router, prefix='/api/v1')
     app.include_router(auth_router)
     add_middleware(app)

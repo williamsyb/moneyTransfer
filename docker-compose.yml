@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'MONEYTRANS'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: '123456'
+      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    ports:
+      - '3307:3306'
+    volumes:
+      - my-datavolume:/var/lib/mysql
+    networks:
+      - app-network
+    security_opt:
+      - seccomp:unconfined
+  web_python:
+    image: moneytrans/pyweb:latest
+    networks:
+      - app-network
+    ports:
+      - '9005:9005'
+    expose:
+      - '9005'
+    volumes:
+      - ./app:/app
+    depends_on:
+      - mysql
+    environment:
+      PYTHONPATH: $PYTHONPATH:/usr/local/src
+      WORKING_ENV: prod
+    command: 'uvicorn main:app --host 0.0.0.0 --port 9005'
+
+volumes:
+  my-datavolume:
+networks:
+  app-network:
+    driver: bridge

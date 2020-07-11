@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+passlib = "==1.7.2"
+pydantic = "==1.5.1"
+fastapi = "==0.58.1"
+python-multipart = "*"
+uvicorn = "*"
+pytest = "*"
+requests = "*"
+faker = "*"
+pipreqs = "*"
+PyJWT = "==1.7.1"
+SQLAlchemy = "*"
+
+[requires]
+python_version = "3.7"

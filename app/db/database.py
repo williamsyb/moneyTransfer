@@ -21,9 +21,3 @@ def get_db():
     finally:
         db.close()
 
-# def get_db_():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
