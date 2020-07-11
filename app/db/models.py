@@ -7,6 +7,13 @@ from config.config import config
 from sqlalchemy import create_engine
 
 
+def to_dict(self):
+    return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
+
+
+Base.to_dict = to_dict
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -18,7 +25,7 @@ class User(Base):
     hashed_password = Column(String(128))
     wallet = Column(Float, default=100.0)
     is_active = Column(Boolean, default=True)
-    is_supervisor =Column(Boolean, default=False)
+    is_supervisor = Column(Boolean, default=False)
 
 
 class Balance(Base):
@@ -51,10 +58,9 @@ class Reports(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(80), nullable=False)
-    year=Column(Integer)
+    year = Column(Integer)
     month = Column(Integer)
     content = Column(LONGTEXT)
-
 
 
 engine = create_engine(
