@@ -26,4 +26,5 @@ git clone https://github.com/williamsyb/moneyTransfer.git
 cd moneyTransfer
 sh build.sh
 docker-compose up
+visit  http://localhost:9005/docs
 ```
